@@ -1,0 +1,197 @@
+﻿@model IEnumerable<SebJones.Models.Claim>
+
+@{
+    ViewBag.Title = "Claims";
+    int count = 1;
+}
+
+<div class="top-content-main-title">
+    <h2>View, Create and Edit Claims</h2>
+</div>
+<div class="content">
+    <div class="content-full-width">
+        <p style="text-align: center">
+            From here you can select existing claims to view and edit, create new clams, and submit claims for approval. 
+        </p>
+        <p style="text-align: center">
+            On this screen administrators can review submitted claims and reject or approve as appropriate.
+        </p>
+        <div class="content-data" id="content-data">
+                <table class="table">
+                    <tr>
+                        <td colspan="6" align="left">
+                            <a href="@Url.Action("Create", "Claim")">
+                                <span class="fa fa-plus fa-lg fa-fw green"></span>
+                                <span>Create New Claim</span>
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th style="min-width: 100px">
+                            <span>@Html.DisplayNameFor(model => model.ClaimID)</span>
+                        </th>
+                        <th style="min-width: 250px">
+                            <span>@Html.DisplayNameFor(model => model.CreatedBy)</span>
+                        </th>
+                        <th style="min-width: 200px">
+                            <span>@Html.DisplayNameFor(model => model.CreatedDate)</span>
+                        </th>
+                        <th style="min-width: 200px">
+                            <span>@Html.DisplayNameFor(model => model.LastUpdatedDate)</span>
+                        </th>
+                        <th style="min-width: 100px">
+                            <span>@Html.DisplayNameFor(model => model.Status)</span>
+                        </th>
+                        <th style="min-width: 100px">
+                            <span>Amount</span>
+                        </th>
+                        <th style="min-width: 20px"></th>
+                        <th style="min-width: 20px"></th>
+                        <th style="min-width: 20px"></th>
+                    </tr>
+                    @if (Model.Count() == 0)
+                    {
+                        <tr>
+                            <td colspan="6">
+                                No rows to display
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        foreach (var item in Model)
+                        {
+                            if (count % 2 == 0)
+                            {
+                                @:<tr class="altRow">
+                            }
+                            else
+                            {
+                                @:<tr>
+                            }
+                            count++;
+                            <td>
+                                <span>@Html.DisplayFor(modelItem => item.ClaimID)</span>
+                            </td>
+                            <td>
+                                <span>@Html.DisplayFor(modelItem => item.CreatedBy.UserName)</span>
+                            </td>
+                            <td>
+                                <span>@Html.DisplayFor(modelItem => item.CreatedDate)</span>
+                            </td>
+                            <td>
+                                <span>@Html.DisplayFor(modelItem => item.LastUpdatedDate)</span>
+                            </td>
+                            <td>
+                                <span>@Html.DisplayFor(modelItem => item.Status.Description)</span>
+                            </td>
+                            <td>
+                                <span>@item.Receipts.Select(t => t.Amount).Sum()</span>
+                            </td>
+                            <td>
+                                <a href="/Receipt/Index/@item.ClaimID" title="View Details">
+                                    <span class="fa fa-edit fa-lg fa-fw"></span>
+                                </a>
+                            </td>
+                            if (Request.IsAuthenticated)
+                            {
+                                if (User.IsInRole("admin"))
+                                {
+                                    if (item.Status.Description == "Submitted")
+                                    {
+                                        <td>
+                                            <a href="@Url.Action("Reject", "Claim", new { id = item.ClaimID })" title="Reject">
+                                                <span class="fa fa-close fa-lg fa-fw red"></span>
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <a href="@Url.Action("Approve", "Claim", new { id = item.ClaimID })" title="Approve">
+                                                <span class="fa fa-check fa-lg fa-fw green"></span>
+                                            </a>
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td><span>&nbsp;</span></td>
+                                        <td><span>&nbsp;</span></td>
+                                    }
+                                }
+                                else
+                                {
+                                    if (item.Status.Description == "Draft")
+                                    {
+                                        <td>
+                                            <a href="@Url.Action("Delete", "Claim", new { id = item.ClaimID })" onclick="return deleteVal();" title="Delete">
+                                                <span class="fa fa-trash fa-lg fa-fw"></span>
+                                            </a>
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td>&nbsp;</td>
+                                    }
+                                    
+                                    if (item.Status.Description == "Draft")
+                                    {
+                                        <td>
+                                            <button type="button" onclick="location.href='/Claim/Submit/@item.ClaimID'">
+                                                <span>Submit</span>
+                                            </button>
+                                        </td>
+                                    }
+                                    else if (item.Status.Description == "Submitted")
+                                    {
+                                        <td>
+                                            <button type="button" onclick="location.href='/Claim/Withdraw/@item.ClaimID'">
+                                                <span>Withdraw</span>
+                                            </button>
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td><span>&nbsp;</span></td>
+                                    }
+
+                                    @*@Html.ActionLink("Edit", "Edit", new { id = item.ClaimID }) |
+                                @Html.ActionLink("Details", "Details", new { id = item.ClaimID }) |
+                                @Html.ActionLink("Delete", "Delete", new { id = item.ClaimID })*@
+
+                                }
+                            }
+
+                            @:</tr>
+                        }
+                    }
+                    @if (Model.Count() > 10)
+                    {
+                        <tr>
+                            <td colspan="6" align="left">
+                                <a href="@Url.Action("Create", "Claim")">
+                                    <span class="fa fa-plus fa-lg fa-fw green"></span>
+                                    <span>Create New Claim</span>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                    <tr><td></td></tr>
+                </table>
+            <p><br /><br /><br /><br /></p>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    divHeightThreshold = 25;
+
+    function deleteVal() {
+        var result = confirm("Are you sure you want to delete this claim?\n\n" +
+            "All receipts associated with this claim will also be removed.");
+        if (result == true) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+</script>
+
+

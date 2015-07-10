@@ -1,0 +1,341 @@
+﻿@model IEnumerable<SebJones.Models.Receipt>
+
+@{
+    ViewBag.Title = "Receipts";
+    int count = 1;
+}
+
+<div class="top-content-main-title">
+    <h2>View, Create and Edit Receipts</h2>
+</div>
+<div class="content">
+    <div class="content-full-width">
+        <p style="text-align: center">
+            From here you can add, edit and remove receipts from your overall claim.
+        </p>
+        <div class="content-data" id="content-data">
+            <table class="table">
+                <tr>
+                    <th>Claim ID</th>
+                    <th>Owner</th>
+                    <th>Status</th>
+                    <th>Total</th>
+                </tr>
+                <tr>
+                    <td>@ViewBag.Claim.ClaimID</td>
+                    <td>@ViewBag.Claim.CreatedBy.UserName</td>
+                    <td>@ViewBag.Claim.Status.Description</td>
+                    <td>@Model.Select(t => t.Amount).Sum()</td>
+                </tr>
+            </table>
+            <form action='@Url.Action("Create")' method="post">
+                @Html.AntiForgeryToken()
+                <table class="table">
+                    @if (User.Identity.Name == @ViewBag.Claim.CreatedBy.UserName &&
+                    (@ViewBag.Claim.Status.Description == "Draft" ||
+                    @ViewBag.Claim.Status.Description == "Rejected"))
+                    {
+                        <tr>
+                            <td colspan="5" align="left">
+                                <a onclick="javascript:showAddRow()">
+                                    <span class="fa fa-plus fa-lg fa-fw green"></span>
+                                    <span>Add Receipt</span>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        <tr><td colspan="5">&nbsp;</td></tr>
+                    }
+                    <tr>
+                        <th style="min-width: 100px">
+                            <span>@Html.DisplayNameFor(model => model.ReceiptID)</span>
+                        </th>
+                        <th style="min-width: 250px">
+                            <span>@Html.DisplayNameFor(model => model.Description)</span>
+                        </th>
+                        <th style="min-width: 200px">
+                            <span>@Html.DisplayNameFor(model => model.Category.Description)</span>
+                        </th>
+                        <th style="min-width: 100px">
+                            <span>@Html.DisplayNameFor(model => model.Category.ClaimVAT)</span>
+                        </th>
+                        <th style="min-width: 100px">
+                            <span>@Html.DisplayNameFor(model => model.Amount)</span>
+                        </th>
+                        @if (User.Identity.Name == ViewBag.Claim.CreatedBy.UserName &&
+                            (ViewBag.Claim.Status.Description == "Draft" ||
+                            ViewBag.Claim.Status.Description == "Rejected"))
+                        {
+                            <th style="min-width: 50px"></th>
+                            <th style="min-width: 50px"></th>
+                        }
+                    </tr>
+                    @if (Model.Count() == 0)
+                    {
+                                    <tr>
+                                        <td colspan="4" align="left">
+                                            <span>No rows to display</span>
+                                        </td>
+                                    </tr>
+                    }
+                    else
+                    {
+                        foreach (var item in Model)
+                        {
+                            if (count % 2 == 0)
+                            {
+                                @:<tr class="altRow">
+                            }
+                            else
+                            {
+                                @:<tr>
+                            }
+                            count++;
+                            <td>
+                                <span id="@(item.ReceiptID)_ReceiptIDSpan">@Html.DisplayFor(modelItem => item.ReceiptID)</span>
+                                <input type="hidden" id="@(item.ReceiptID)_ReceiptID" value="@item.ReceiptID" />
+                            </td>
+                            <td>
+                                <span id="@(item.ReceiptID)_DescriptionSpan">@Html.DisplayFor(modelItem => item.Description)</span>
+                                <input type="text" class="hidden" size="20" id="@(item.ReceiptID)_Description" value="@item.Description" />
+                            </td>
+                            <td>
+                                <span id="@(item.ReceiptID)_CategorySpan">@Html.DisplayFor(modelItem => item.Category.Description)</span>
+                                @if (User.Identity.Name == item.ClaimID.CreatedBy.UserName &&
+                                    (Model.First().ClaimID.Status.Description == "Draft" ||
+                                    Model.First().ClaimID.Status.Description == "Rejected"))
+                                {
+                                    @Html.DropDownList("@(item.ReceiptID)_Category", ViewBag.Categories as SelectList, 
+                                    item.Category.Description,
+                                    new { id = @item.ReceiptID + "_Category",
+                                          value = @item.Category.CategoryID,
+                                          text = @item.Category.Description,
+                                          @class = "hidden" })
+                                }
+                                
+                            </td>
+                            <td>
+                                <span>@Html.DisplayFor(modelItem => item.Category.ClaimVAT)</span>
+                            </td>
+                            <td>
+                                <span id="@(item.ReceiptID)_AmountSpan">@Html.DisplayFor(modelItem => item.Amount)</span>
+                                <input type="text" class="hidden" size="10" id="@(item.ReceiptID)_Amount" value="@item.Amount" />
+                            </td>
+                            if (Request.IsAuthenticated)
+                            {
+                                if (User.Identity.Name == item.ClaimID.CreatedBy.UserName &&
+                                    (Model.First().ClaimID.Status.Description == "Draft" ||
+                                    Model.First().ClaimID.Status.Description == "Rejected"))
+                                {
+                                <td>
+                                    <a id="@(item.ReceiptID)_Edit" onclick="javascript:showEditRow(@item.ReceiptID)" title="Edit Receipt">
+                                        <span class="fa fa-edit fa-lg fa-fw"></span>
+                                    </a>
+                                    <a id="@(item.ReceiptID)_Save" class="hidden" onclick="javascript:saveReceipt(@item.ReceiptID)" title="Save Changes">
+                                        <span class="fa fa-save fa-lg fa-fw green"></span>
+                                    </a>
+                                </td>
+                                <td>
+                                    <a id="@(item.ReceiptID)_Delete" href="/Receipt/Delete/@item.ReceiptID" onclick="return deleteVal();" title="Delete">
+                                        <span class="fa fa-trash fa-lg fa-fw"></span>
+                                    </a>
+                                    <a id="@(item.ReceiptID)_Cancel" class="hidden" onclick="javascript:hideEditRow(@item.ReceiptID)" title="Cancel">
+                                        <span class="fa fa-close fa-lg fa-fw red"></span>
+                                    </a>
+                                </td>
+                                }
+                            }
+                            <td id="@(item.ReceiptID)_Message" class="hidden"></td>
+                            @:</tr>
+                        }
+                        
+                    }
+                    @if (count % 2 == 0)
+                    {
+                        @:<tr id="addReceiptRow" class="hidden altRow">
+                    }
+                    else
+                    {
+                        @:<tr id="addReceiptRow" class="hidden">
+                    }
+                        <td>
+                            <input name="claimID" type="hidden" value="@ViewBag.Claim.ClaimID" />
+                        </td>
+                        <td>
+                            <input id="newDescription" name="newDescription" type="text" size="20" />
+                        </td>
+                        <td>
+                            @Html.DropDownList("newCategory", ViewBag.Categories as SelectList, "Select ...")
+                            @*@Html.ValidationMessageFor(model => model.FirstOrDefault().Category)*@
+                        </td>
+                        <td>
+                            <input type="checkbox" disabled="disabled" />
+                        </td>
+                        <td>
+                            <input id="newAmount" name="newAmount" type="text" size="10" />
+                        </td>
+                        <td>
+                            <a href="javascript:$('form').submit();" title="Add">
+                                <span class="fa fa-check fa-lg fa-fw green"></span>
+                            </a>
+                        </td>
+                        <td>
+                            <a onclick="javascript:hideAddRow()" title="Cancel">
+                                <span class="fa fa-close fa-lg fa-fw red"></span>
+                            </a>
+                        </td>
+                    </tr>
+
+                    @if (Model.Count() > 10 && 
+                    User.Identity.Name == ViewBag.Claim.CreatedBy.UserName &&
+                    (ViewBag.Claim.Status.Description == "Draft" ||
+                    ViewBag.Claim.Status.Description == "Rejected"))
+                    {
+                        <tr>
+                            <td colspan="5" align="left">
+                                <a onclick="javascript:showAddRow()">
+                                    <span class="fa fa-plus fa-lg fa-fw green"></span>
+                                    <span>Add Receipt</span>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                    <tr><td></td></tr>
+                    <tr>
+                        <td colspan="5" align="left">
+                            <a href="/Claim/Index">
+                                <span class="fa fa-arrow-left fa-lg fa-fw"></span>
+                                <span>Back to Claims</span>
+                            </a>
+                        </td>
+                    </tr>
+                    </table>
+                </form>
+                        <p><br /><br /><br /><br /></p>
+                    </div>
+                </div>
+            </div>
+            <script type="text/javascript">
+                divHeightThreshold = 25;
+
+                function showAddRow() {
+                    $('#addReceiptRow').removeClass('hidden');
+                }
+
+                function hideAddRow() {
+                    $('#addReceiptRow').addClass('hidden');
+                    $('#newDescription').val('');
+                    $('#newAmount').val('');
+                }
+
+                function deleteVal() {
+                    var result = confirm("Are you sure you want to delete this receipt?");
+                    if (result == true) {
+                        return true;
+                    }
+                    else {
+                        return false;
+                    }
+                }
+
+                function showEditRow(id) {
+
+                    // Hide Elements
+                    $('#' + id + "_DescriptionSpan").addClass('hidden');
+                    $('#' + id + "_CategorySpan").addClass('hidden');
+                    $('#' + id + "_AmountSpan").addClass('hidden');
+                    $('#' + id + "_Edit").addClass('hidden');
+                    $('#' + id + "_Delete").addClass('hidden');
+
+                    // Show Elements
+                    $('#' + id + "_Description").removeClass('hidden');
+                    $('#' + id + "_Category").removeClass('hidden');
+                    $('#' + id + "_Amount").removeClass('hidden');
+                    $('#' + id + "_Save").removeClass('hidden');
+                    $('#' + id + "_Cancel").removeClass('hidden');
+
+                }
+
+                function hideEditRow(id) {
+
+                    // Show Elements
+                    $('#' + id + "_DescriptionSpan").removeClass('hidden');
+                    $('#' + id + "_CategorySpan").removeClass('hidden');
+                    $('#' + id + "_AmountSpan").removeClass('hidden');
+                    $('#' + id + "_Edit").removeClass('hidden');
+                    $('#' + id + "_Delete").removeClass('hidden');
+
+                    // Hide Elements
+                    $('#' + id + "_Description").addClass('hidden');
+                    $('#' + id + "_Category").addClass('hidden');
+                    $('#' + id + "_Amount").addClass('hidden');
+                    $('#' + id + "_Save").addClass('hidden');
+                    $('#' + id + "_Cancel").addClass('hidden');
+
+                }
+
+                function saveReceipt(id) {
+    
+                    var data = {
+                        ReceiptID: $('#' + id + '_ReceiptID').val(),
+                        Description: $('#' + id + '_Description').val(),
+                        Category: $('#' + id + '_Category').val(),
+                        @*ClaimID: @(ViewBag.Claim.ClaimID),*@
+                        Amount: $('#' + id + '_Amount').val(),
+                    };
+                    $.ajax({
+                        url: "@Url.Action("Edit", "Receipt")",
+                        contentType: "application/json; charset=utf-8",
+                        type: "POST",
+                        dataType: "json",
+                        data: JSON.stringify(data),
+                        success: function (mydata) {
+                            window.location.href = '@Url.Action("Index", "Receipt", new { id = ViewBag.Claim.ClaimID })'
+                        },
+                        error: function (XMLHttpRequest, testStatus, errorThrown) {
+                            alert(XMLHttpRequest);
+                        }
+                    });
+                    return false;
+                }
+
+            </script>
+
+
+
+
+            @*<h2>Index</h2>
+
+                <p>
+                    @Html.ActionLink("Create New", "Create")
+                </p>
+                <table class="table">
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Description)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Amount)
+                        </th>
+                        <th></th>
+                    </tr>
+
+                @foreach (var item in Model) {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Description)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Amount)
+                        </td>
+                        <td>
+                            @Html.ActionLink("Edit", "Edit", new { id=item.ReceiptID }) |
+                            @Html.ActionLink("Details", "Details", new { id=item.ReceiptID }) |
+                            @Html.ActionLink("Delete", "Delete", new { id=item.ReceiptID })
+                        </td>
+                    </tr>
+                }
+
+                </table>*@

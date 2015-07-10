@@ -1,0 +1,98 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+<div class="top-content-top">
+    @*<h2>Index</h2>*@
+</div>
+<div class="top-content-main-title">
+    <h2>Welcome to the Tech Solutions Expense Manager System</h2>
+</div>
+<div class="content">
+    <div class="content-left">
+        <span class="fa fa-file-text-o fa-2x fa-fw"></span>
+        <b>Create</b>
+        <p>View existing claims, create new ones, and submit them for approval all from one easy to use dashboard.</p>
+    </div>
+    <div class="content-middle">
+        <span class="fa fa-check fa-2x fa-fw"></span>
+        <b>Approve</b>
+        <p>Review your employee's claims then reject or approve their payments.</p>
+    </div>
+    <div class="content-right">
+        <span class="fa fa-pie-chart fa-2x fa-fw"></span>
+        <b>Report</b>
+        <p>Stay on top of your SLA's with graphical views of all your requests and their statuses.</p>
+    </div>
+</div>
+<div class="top-content-main-title">
+    <a name="About"></a>
+    <h2>About the Application</h2>
+</div>
+<div class="content">
+    <div class="content-full-width">
+        <p>This application is a work in progress exercise in showcasing some web development skills
+including .NET MVC, C#, HTML, Javascript and CSS.</p>
+
+<p>It is a simple version of an expenses application that allows users to create and submit
+expenses claims, and allows admins to review and then approve/reject them as they wish.<br /><br />
+
+The application utilises a code first database creation, so on running it for the first time
+it will attempt to create a SQL Server db on your local machine and seed it with some relevant
+data. You may need to configure the target local environment in the connection string in the
+web.config file.<br /><br />
+
+When creating the database two users will automatically be generated for you to log in with.
+One represents a typical user, and the other represents an administrator. The log in details
+for each are as follows:</p>
+<p>
+Regular User -<br />
+Username: user@expensemanager.com<br />
+Password: Pa$$w0rd<br /><br />
+
+Admin User -<br />
+Username: admin@expensemanager.com<br />
+Password: Pa$$w0rd<br /><br />
+</p>
+<p>
+Some simple rules for each user type:<br /><br />
+
+Regular User -<br />
+A regular user can create claims and add receipts to those claims. They can submit their claims
+(moving them from Draft to Submitted) and they can withdraw them back to Draft. These users
+will only see their own claims when the log in.<br /><br />
+
+Admin User-<br />
+An admin user can do the same as a regular user (in terms of creating their own claims) but
+they can also approve or reject other peoples. Admin's cannot edit the receipts of another
+user's claims. Admin's cannot approve or reject their own claims.<br /><br />
+
+Dev Notes:<br />
+
+Unfortunately I have not had the time to complete this app and have only spent a couple of
+days on it so far. Currently there is no section for 'analyzing' the claims (i.e. seeing
+graphical representation of the data). It's also currently missing some form validation to
+ensure correct data types are submitted, and some of the logic around admins dealing with
+their own claims needs a bit more attention.<br /><br />
+
+I have also not had a chance to write up some Test Methods for this application as I went. </p>
+    </div>
+</div>
+<div class="top-content-main-title">
+    <a name="Contact"></a>
+    <h2>Contact</h2>
+</div>
+<div class="content">
+    <div class="content-full-width">
+        <p>
+            Seb Jones<br />
+            sebowenjones@gmail.com<br />
+            07841 577137<br />
+            LinkedIn: <a href="https://uk.linkedin.com/in/sebjones">https://uk.linkedin.com/in/sebjones</a><br />
+</p>
+    </div>
+</div>
+<script type="text/javascript">
+    divHeightThreshold = 50;
+</script>

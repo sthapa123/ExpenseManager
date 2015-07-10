@@ -1,0 +1,303 @@
+﻿html {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-family: "Open Sans", sans-serif;
+    font-size: 1em;
+    background-image: url(../Content/Images/london-skyline.jpg);
+    background-size: cover;
+}
+
+#particles {
+    position: absolute;
+    width: 100%;
+    height: 75%;
+    overflow: hidden;
+    margin: 0;
+    z-index: -1;
+}
+
+#playpause {
+    position: absolute;
+    right: 1%;
+    opacity: 0.5;
+    z-index: 2;
+}
+
+ul {
+    list-style: none;
+}
+
+a {
+    text-decoration: none;
+}
+
+.navigation {
+    z-index: 3;
+    background-color: rgba(3, 13, 24, 0.3);
+    display: block;
+    height: 100%;
+    -webkit-font-smoothing: antialiased;
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 122px;
+    width: 100%;
+    transition: background-color 0.5s, height 0.5s;
+}
+
+.navigation.is-fixed {
+    height: 50px;
+    background-color: rgba(3, 13, 24, 0.8);
+}
+
+.logo {
+    position: relative;
+    padding: 24px 0 24px 100px;
+    float: left;
+    display: inline-block;
+    width: 200px;
+    transition: padding 0.5s;
+}
+
+.logo.is-fixed {
+    padding: 3px 0 3px 100px;
+}
+
+.LogoSmall {
+    width: 114px;
+    height: 40px;
+}
+
+.navigation nav {
+    height: 100%;
+    display: block;
+    padding-left: 100px;
+    padding-right: 100px;
+}
+
+.navigation ul {
+    float: right;
+    position: static;
+    width: auto;
+    max-width: 100%;
+    transform: scale(1);
+    text-align: center;
+    background-color: transparent;
+    height: 100%;
+    margin: 0;
+    border: 0;
+    padding: 0;
+    vertical-align: baseline;
+}
+
+.navigation ul form {
+    display: inline-block;
+}
+
+.navigation li {
+    display: inline-block;
+    height: 100%;
+    text-align: -webkit-match-parent;
+    white-space: nowrap;
+}
+
+.navigation li a {
+    padding: 52px 15px 52px 15px;
+    position: relative;
+    text-align: center;
+    vertical-align: text-bottom;
+    color: #f0eee1;
+    display: inline-block;
+    margin: 0;
+    border: 0;
+    border-bottom: 5px solid transparent;
+    transition: padding 0.5s;
+}
+
+.navigation li a.is-fixed {
+    padding: 16px 15px 16px 15px;
+}
+
+.navigation li a b {
+    text-transform: uppercase;
+    font-weight: 700;
+}
+
+.navigation li a:hover {
+    border-bottom: 5px solid lightblue;
+}
+
+div.top-content {
+    position: absolute;
+    top: 70px;
+    left: 0;
+    width: 100%;
+}
+
+div.top-content-top {
+    position: absolute;
+    height: 50%;
+    width: 100%;
+    text-align: center;
+    z-index: 1;
+}
+
+div.top-content-top h2 {
+    padding: 150px 0 100px 0;
+    margin: 0;
+}
+
+div.top-content-main {
+    position: absolute;
+    z-index: 1;
+    top: 300px;
+    left: 0;
+    width: 100%;
+    background-color: white;
+    border-top: 5px solid lightblue;
+    text-align: center;
+}
+
+.invisible {
+    display: none;
+}
+
+@media only screen and (max-width: 1100px) {
+    .navigation li a b {
+        display: none;
+    }
+}
+
+@media only screen and (max-width: 785px) {
+    div.logo {
+        display: none;
+    }
+}
+
+div.top-content-main-title {
+    width: 100%;
+    overflow: hidden;
+    background-color: rgba(3, 13, 24, 0.2);
+    color: rgba(3, 13, 24, 0.8);
+}
+
+div.content {
+    overflow: hidden;
+    color: rgba(3, 13, 24, 0.8);
+    margin: 0;
+    border: 0;
+    text-align: center;
+    padding: 20px 80px 20px 80px;
+    display: block;
+}
+
+div.content p {
+    padding: 0 20px 0 20px;
+    text-align: center;
+}
+
+div.content-left, div.content-middle, div.content-right {
+    width: 33%;
+    box-sizing: border-box;
+    display: inline-block;
+    font-size: 1.3em;
+    float: left;
+    padding: 0 10px 0 10px;
+}
+
+div.content-left span {
+    color: lightblue;
+}
+
+div.content-middle span {
+    color: lightblue;
+}
+
+div.content-right span {
+    color: lightblue;
+}
+
+div.content-full-width {
+    width: 100%;
+    padding: 0 10px 0 10px;
+    font-size: 1em;
+    display: inline-block;
+}
+
+div.content-full-width p {
+    padding: 0 20px 0 20px;
+    text-align: justify;
+}
+
+.content-data {
+    z-index: 2;
+    font-size: 0.8em;
+    text-align: center;
+}
+
+.table {
+    margin: 0 auto;
+    width: 500px;
+    background-color: #FCFCFC;
+}
+
+.table th {
+    background-color: lightblue;
+    font-weight: bold;
+    color: #FFF !important;
+    line-height: 30px;
+}
+
+.table th span {
+    padding: 0 10px 0 10px;
+}
+
+.altRow {
+    background-color: #E4E9F5;
+}
+
+.table td a:link, .table td a:visited {
+    color: rgba(3, 13, 24, 0.8);
+}
+
+.table button {
+    min-width: 75px;
+}
+
+.red { color: red; }
+.green { color: green; }
+
+.hidden {
+    display: none;
+}
+
+
+/* styles for validation helpers 
+.field-validation-error {
+    color: #b94a48;
+}
+
+.field-validation-valid {
+    display: none;
+}
+
+input.input-validation-error {
+    border: 1px solid #b94a48;
+}
+
+input[type="checkbox"].input-validation-error {
+    border: 0 none;
+}
+
+.validation-summary-errors {
+    color: #b94a48;
+}
+
+.validation-summary-valid {
+    display: none;
+}*/

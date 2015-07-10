@@ -1,0 +1,131 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    @Styles.Render("~/Content/css")
+    <script type="text/javascript">
+        var divHeightThreshold = 50;
+    </script>
+</head>
+<body>
+    <div id="particles"></div>
+    <div id="playpause">
+        <a onclick="javascript:playPauseParticles()">
+            <span class="fa-stack fa-lg">
+                <span id="playpauseStatus" style="display:none">PAUSE</span>
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i id="playpauseIcon" class="fa fa-pause fa-stack-1x fa-inverse"></i>
+            </span>
+        </a>
+    </div>
+    <div class="navigation">
+        <div class="logo">
+            <a href="/Home/Index">
+                <img id="logo" src="~/Content/Images/LogoBlue.png" />
+            </a>
+        </div>
+        <nav>
+            <ul>
+                <li>
+                    <a href="/Home/Index" title="Home">
+                        <span class="fa fa-home fa-lg fa-fw"></span>
+                        <b>Home</b>                                            
+                    </a>
+                </li>
+                <li>
+                    <a href="/Home/Index/#About" title="About">
+                        <span class="fa fa-info fa-lg fa-fw"></span>
+                        <b>About</b>
+                    </a>
+                </li>
+                <li>
+                    <a href="/Home/Index/#Contact" title="Contact">
+                        <span class="fa fa-phone fa-lg fa-fw"></span>
+                        <b>Contact</b>
+                    </a>
+                </li>
+                @Html.Partial("_LoginPartial")
+            </ul>
+        </nav>
+    </div>
+
+    <div class="top-content">
+        <div class="top-content-main">
+            @RenderBody()
+        </div>
+    </div>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/js")
+    @RenderSection("scripts", required: false)
+    <script type="text/javascript">
+
+        function setDivHeights() {
+            var height = $(window).height();
+            var divTop = (height / 100) * divHeightThreshold;
+            var divHeight = divTop + 15;
+            //var divPageHeight = divTop * 2;
+            //divPageHeight = parseInt(divPageHeight) + 'px';
+            divTop = parseInt(divTop) + 'px';
+            divHeight = parseInt(divHeight) + 'px';
+            $("div.top-content-main").css('top', divTop);
+            $("#playpause").css('top', divHeight);
+            //$("div.content").css('min-height', divPageHeight);
+        }
+
+        function resizeMenu() {
+            var topContentMain = $('div.top-content-main');
+            var topContentMainTop = topContentMain.offset().top;
+            var navElement = $('.navigation');
+            var logoElement = $('.logo');
+            var logoImage = $('#logo');
+            var aElement = $('.navigation li a');
+            var bElement = $('.navigation li a b');
+            var ppElement = $('#playpause');
+
+            if ($(window).scrollTop() > (topContentMainTop - 75)) {
+                navElement.addClass('is-fixed');
+                logoElement.addClass('is-fixed');
+                aElement.addClass('is-fixed');
+                logoImage.addClass('LogoSmall');
+                bElement.addClass('invisible');
+            }
+            else {
+                navElement.removeClass('is-fixed');
+                logoElement.removeClass('is-fixed');
+                aElement.removeClass('is-fixed');
+                logoImage.removeClass('LogoSmall');
+                bElement.removeClass('invisible');
+            }
+        }
+
+        function playPauseParticles() {
+            var status = $('#playpauseStatus').html();
+            var ppIcon = $('#playpauseIcon');
+            if (status == "PAUSE") {
+                pause();
+                $('#playpauseStatus').html('PLAY');
+                ppIcon.removeClass('fa-pause');
+                ppIcon.addClass('fa-play');
+            }
+            else if (status == "PLAY")
+            {
+                start();
+                $('#playpauseStatus').html('PAUSE');
+                ppIcon.removeClass('fa-play');
+                ppIcon.addClass('fa-pause');
+            }
+        }
+
+        $(document).ready(function () {
+            setDivHeights();
+            $(window).bind('resize', setDivHeights);
+            $(window).on('scroll', resizeMenu);
+            setTimeout(playPauseParticles, 10000);
+        });
+
+    </script>
+</body>
+</html>

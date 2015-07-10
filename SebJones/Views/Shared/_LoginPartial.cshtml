@@ -1,0 +1,44 @@
+﻿@using Microsoft.AspNet.Identity
+@if (Request.IsAuthenticated)
+{
+    using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "" }))
+    {
+    @Html.AntiForgeryToken()
+        <li>
+            <a href="/Claim/Index" id="claimLink" title="Claims">
+                <span class="fa fa-file-text-o fa-lg fa-fw"></span>
+                <b>Claims</b>
+            </a>
+            @*@Html.ActionLink("Hello " + User.Identity.GetUserName() + "!", "Manage", "Account", routeValues: null, htmlAttributes: new { title = "Manage" })*@
+        </li>
+        <li>
+            <a href="/Account/Manage" id="manageLink" title="Manage Account">
+                <span class="fa fa-user fa-lg fa-fw"></span>
+                <b>Manage</b>
+            </a>
+            @*@Html.ActionLink("Hello " + User.Identity.GetUserName() + "!", "Manage", "Account", routeValues: null, htmlAttributes: new { title = "Manage" })*@
+        </li>
+        <li>
+            <a href="javascript:document.getElementById('logoutForm').submit()" title="Log Out">
+                <span class="fa fa-sign-out fa-lg fa-fw"></span>
+                <b>Log off</b>
+            </a>
+        </li>
+    }
+}
+else
+{
+
+    <li>
+        <a href="/Account/Register" id="registerLink">
+            <span class="fa fa-pencil-square-o fa-lg fa-fw"></span>
+            <b>Register</b>
+        </a>
+    </li>
+    <li>
+        <a href="/Account/Login" id="loginLink">
+            <span class="fa fa-key fa-lg fa-fw"></span>
+            <b>Login</b>
+        </a>
+    </li>
+}
